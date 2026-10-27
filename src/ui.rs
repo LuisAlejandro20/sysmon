@@ -1,7 +1,7 @@
 use ratatui::{
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
-    widgets::{Block, Borders, Gauge, Paragraph},
+    widgets::{Block, Borders, Gauge, Paragraph, List, ListItem},
 };
 use sysinfo::System;
 
@@ -9,8 +9,9 @@ pub fn ui(f: &mut ratatui::Frame, sys: &System) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Percentage(50),
-            Constraint::Percentage(50)
+            Constraint::Percentage(30),
+            Constraint::Percentage(30),
+            Constraint::Percentage(40)
         ].as_ref())
         .split(f.area());
 
@@ -41,4 +42,23 @@ pub fn ui(f: &mut ratatui::Frame, sys: &System) {
         .label(mem_label);
 
     f.render_widget(mem_gauge, chunks[1]);
+
+    let mut processes: Vec<_> = sys.processes().values().collect();
+    processes.sort_by(|a, b| b.memory().cmp(&a.memory()));
+
+    let mut process_items = Vec::new();
+
+    for (i,p) in processes.iter().take(5).enumerate() {
+        let memory_mb = p.memory() / 1024 / 1024;
+
+        let name = p.name().to_string_lossy();
+        let item_str = format!("{}. {} - {} MB", i + 1, name, memory_mb);
+        process_items.push(ListItem::new(item_str));
+    }
+
+    let process_list = List::new(process_items)
+        .block(Block::default().title("Top Process (Memory)").borders(Borders::ALL))
+        .style(Style::default().fg(Color::Yellow));
+
+    f.render_widget(process_list, chunks[2])
 }
