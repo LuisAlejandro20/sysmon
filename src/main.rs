@@ -1,5 +1,6 @@
 mod ui;
 mod runapp;
+mod format;
 
 use runapp::run_app;
 use crossterm::{

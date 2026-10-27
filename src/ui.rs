@@ -5,6 +5,8 @@ use ratatui::{
 };
 use sysinfo::System;
 
+use crate::format::*;
+
 pub fn ui(f: &mut ratatui::Frame, sys: &System) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
@@ -33,7 +35,10 @@ pub fn ui(f: &mut ratatui::Frame, sys: &System) {
         0
     };
 
-    let mem_label = format!("{} MB / {} MB", sys.used_memory() / 1024 / 1024, sys.total_memory() / 1024 / 1024);
+    let used_str = format_memory(sys.used_memory());
+    let total_str = format_memory(sys.total_memory());
+
+    let mem_label = format!("{} / {}", used_str, total_str);
 
     let mem_gauge = Gauge::default()
         .block(Block::default().title("Memory usage").borders(Borders::ALL))
@@ -49,10 +54,10 @@ pub fn ui(f: &mut ratatui::Frame, sys: &System) {
     let mut process_items = Vec::new();
 
     for (i,p) in processes.iter().take(5).enumerate() {
-        let memory_mb = p.memory() / 1024 / 1024;
+        let memory_str = format_memory(p.memory());
 
         let name = p.name().to_string_lossy();
-        let item_str = format!("{}. {} - {} MB", i + 1, name, memory_mb);
+        let item_str = format!("{}- {} - {}", i  + 1, name, memory_str);
         process_items.push(ListItem::new(item_str));
     }
 
