@@ -1,9 +1,14 @@
 use crossterm::{
     event::{self, Event, KeyCode},
 };
-use std::{error::Error, io, time::Duration};
-use ratatui::Terminal;
-use ratatui::backend::CrosstermBackend;
+use std::{
+    error::Error, 
+    io, time::Duration
+};
+use ratatui::{
+    Terminal,
+    backend::CrosstermBackend,
+};
 use sysinfo::System;
 
 use crate::ui::ui;

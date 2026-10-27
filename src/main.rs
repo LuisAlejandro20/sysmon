@@ -2,13 +2,24 @@ mod ui;
 mod runapp;
 
 use runapp::run_app;
-use ratatui::backend::CrosstermBackend;
-use crossterm::terminal::{enable_raw_mode, disable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
-use crossterm::execute;
-use ratatui::Terminal;
+use crossterm::{
+    terminal::{
+        enable_raw_mode,
+        disable_raw_mode,
+        EnterAlternateScreen,
+        LeaveAlternateScreen,
+    },
+    execute,
+};
 use sysinfo::System;
-use std::{error::Error, io};
-
+use std::{
+    error::Error, 
+    io
+};
+use ratatui::{
+    backend::CrosstermBackend,
+    Terminal,
+};
 
 
 
