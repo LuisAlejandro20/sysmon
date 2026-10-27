@@ -48,7 +48,9 @@ pub fn ui(f: &mut ratatui::Frame, sys: &System) {
 
     f.render_widget(mem_gauge, chunks[1]);
 
-    let mut processes: Vec<_> = sys.processes().values().collect();
+    let mut processes: Vec<_> = sys.processes().values()
+        .filter(|p| p.parent().is_none())
+        .collect();
     processes.sort_by(|a, b| b.memory().cmp(&a.memory()));
 
     let mut process_items = Vec::new();
@@ -66,4 +68,5 @@ pub fn ui(f: &mut ratatui::Frame, sys: &System) {
         .style(Style::default().fg(Color::Yellow));
 
     f.render_widget(process_list, chunks[2])
+
 }
